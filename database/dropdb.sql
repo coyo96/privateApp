@@ -9,5 +9,5 @@ WHERE datname = 'events_project';
 
 DROP DATABASE events_project;
 
-DROP USER events_owner;
-DROP USER events_appuser;
+DROP USER events_project_owner;
+DROP USER events_project_appuser;
