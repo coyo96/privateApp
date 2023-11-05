@@ -180,3 +180,4 @@ CREATE TABLE chat_users (
     CONSTRAINT FK_chat_id FOREIGN KEY (chat_id) REFERENCES chats(chat_id)
 );
 
+COMMIT TRANSACTION;
