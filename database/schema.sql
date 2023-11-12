@@ -1,22 +1,19 @@
 BEGIN TRANSACTION;
 
 CREATE TABLE users (
-    user_id varchar(36) NOT NULL, --This will be a UUID generated before insertion
-    username varchar(20) NOT NULL UNIQUE,
-    first_name varchar(30) NOT NULL,
+    user_id varchar(50) NOT NULL, 
+    username varchar(20) NOT NULL UNIQUE, 
+    first_name varchar(30),
     middle_name varChar(30),
-    last_name varChar(30) NOT NULL,
-    email varChar(100) NOT NULL UNIQUE,
-    password_hash varchar(200) NOT NULL,
-    password_salt varChar(20) NOT NULL,
-    role varChar(20) NOT NULL,
-    date_of_birth DATE NOT NULL,
-    primary_phone int NOT NULL UNIQUE,
-    confirmed boolean DEFAULT FALSE,
-    confirmed_on timestamptz, --TIMESTAMPTZ is a postgres keyword that is a date and time with time zone.
+    last_name varChar(30),
+    email varChar(100) UNIQUE,
+    email_verified boolean DEFAULT FALSE,
+    date_of_birth DATE,
+    primary_phone int UNIQUE,
     created_on timestamptz DEFAULT now(),
     gender_code varChar(1), --Optional parameter.
     activated boolean DEFAULT TRUE, --If a user deletes their account, it is bad practice to actually delete it. This marks that the account should not be visible to anyone.
+    picture varChar(200),
     CONSTRAINT PK_user PRIMARY KEY (user_id)
 );
 
@@ -63,7 +60,7 @@ CREATE TABLE locations (
 );
 
 CREATE TABLE user_address (
-    user_id varChar(36) NOT NULL,
+    user_id varChar(50) NOT NULL,
     location_id int NOT NULL,
     is_default boolean NOT NULL,
     CONSTRAINT PK_user_address PRIMARY KEY (user_id, location_id),
@@ -117,7 +114,7 @@ CREATE TABLE user_following (
 
 CREATE TABLE user_likes (
     event_id int NOT NULL,
-    user_id varChar(36) NOT NULL,
+    user_id varChar(50) NOT NULL,
     CONSTRAINT PK_user_event_likes PRIMARY KEY (event_id, user_id),
     CONSTRAINT FK_event_id FOREIGN KEY (event_id) REFERENCES events(event_id),
     CONSTRAINT FK_user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
@@ -171,7 +168,7 @@ CREATE TABLE messages (
 );
 
 CREATE TABLE chat_users (
-    user_id varChar(36) NOT NULL,
+    user_id varChar(50) NOT NULL,
     chat_id int NOT NULL,
     joined_on timestamptz DEFAULT now(),
     CONSTRAINT PK_chat_users PRIMARY KEY (chat_id, user_id),
