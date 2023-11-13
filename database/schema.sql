@@ -7,7 +7,7 @@ CREATE TABLE users (
     middle_name varChar(30),
     last_name varChar(30),
     email varChar(100) UNIQUE,
-    email_verified boolean DEFAULT FALSE,
+    email_verified boolean,
     date_of_birth DATE,
     primary_phone int UNIQUE,
     created_on timestamptz DEFAULT now(),
@@ -25,12 +25,12 @@ CREATE TABLE categories (
 
 CREATE TABLE events (
     event_id SERIAL,
-    organizer_id varChar(36) NOT NULL,
+    organizer_id varChar(50) NOT NULL,
     event_name varChar(100) NOT NULL,
     event_date DATE NOT NULL,
     event_time TIME WITH TIME ZONE NOT NULL,
     description varChar(1000) NOT NULL,
-    img_location varChar(200) NOT NULL, --This will be the URI for the images stored in a separate location.
+    img_url varChar(200) NOT NULL, --This will be the URI for the images stored in a separate location.
     ticket_cost NUMERIC(2),
     purchase_ticket_link varChar(200),
     created_on timestamptz DEFAULT now(),
@@ -92,7 +92,7 @@ CREATE TABLE event_tags (
 
 CREATE TABLE reviews (
     review_id SERIAL,
-    reviewer_id varChar(36) NOT NULL,
+    reviewer_id varChar(50) NOT NULL,
     event_id int NOT NULL,
     review_description varChar(1000) NOT NULL,
     rating int NOT NULL,

@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.UUID;
@@ -24,9 +25,6 @@ public class JdbcUserDao implements UserDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    public boolean newUser() {
-        return true;
-    }
     @Override
     public User getUserById(String userId) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
@@ -51,7 +49,7 @@ public class JdbcUserDao implements UserDao {
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         try {
             int rowsReturned = jdbcTemplate.update(sql, user.getUserId(), user.getUsername(), user.getFirstName(), user.getMiddleName(),
-                    user.getLastName(), user.getEmail(), user.isEmailVerified(), user.getDateOfBirth(),
+                    user.getLastName(), user.getEmail(), user.getEmailVerified(), user.getDateOfBirth(),
                     user.getPrimaryPhone(), user.getGenderCode(), user.getPicture());
             if(rowsReturned != 1) {
                 throw new DaoException("Insert did not return 1 row affected, returned: " + rowsReturned);
@@ -67,13 +65,13 @@ public class JdbcUserDao implements UserDao {
         String sql = "UPDATE username = ?, first_name = ?, middle_name = ?, last_name = ?, email = ?, " +
                 "email_verified = ?, date_of_birth = ?, primary_phone = ?, created_on = ?, " +
                 "gender_code = ?, activated = ?, picture = ? " +
-                "FROM users" +
+                "FROM users " +
                 "WHERE user_id = ?";
         try {
             int rowsReturned = jdbcTemplate.update(sql, user.getUsername(), user.getFirstName(), user.getMiddleName(),
-                                                    user.getLastName(), user.getEmail(), user.isEmailVerified(), user.getDateOfBirth(),
+                                                    user.getLastName(), user.getEmail(), user.getEmailVerified(), user.getDateOfBirth(),
                                                     user.getPrimaryPhone(), user.getCreatedOn(), user.getGenderCode(),
-                                                    user.isActivated(), user.getPicture(), user.getUserId());
+                                                    user.getEmailVerified(), user.getPicture(), user.getUserId());
             if(rowsReturned != 1) {
                 throw new DaoException("Insert did not return 1 row affected, returned: " + rowsReturned);
             }
@@ -93,26 +91,25 @@ public class JdbcUserDao implements UserDao {
         String lastName = rowSet.getString("last_name");
         String email = rowSet.getString("email");
         boolean emailVerified = rowSet.getBoolean("email_verified");
-        Date dateOfBirth = rowSet.getDate("date_of_birth");
+        LocalDate dateOfBirth;
+
+        try {
+            dateOfBirth = rowSet.getDate("date_of_birth").toLocalDate();
+        } catch (NullPointerException e){
+            dateOfBirth = null;
+        }
+
         int primaryPhone = rowSet.getInt("primaryPhone");
         LocalDateTime createdOn = rowSet.getTimestamp("created_on").toLocalDateTime(); // will never be null;
-        String genderCode = rowSet.getString("gender_code");
+        Character genderCode;
+
+        try {
+            genderCode = rowSet.getString("gender_code").charAt(0);
+        } catch (NullPointerException e){
+            genderCode = null;
+        }
         boolean activated = rowSet.getBoolean("activated");
 
-        User.UserBuilder userBuilder = new User.UserBuilder(userId, username);
-            userBuilder
-                    .withFirstName(firstName)
-                    .withMiddleName(middleName)
-                    .withLastName(lastName)
-                    .withEmail(email)
-                    .withEmailVerified(emailVerified)
-                    .withDateOfBirth(dateOfBirth)
-                    .withPrimaryPhone(primaryPhone)
-                    .withCreatedOn(createdOn)
-                    .withGenderCode(genderCode) //takes a string because SQL is dumb (it is checked on the Userbuilder model class)
-                    .withActivated(activated)
-                    .withPicture(picture);
-
-        return userBuilder.build();
+        return new User(userId, username, firstName, middleName, lastName, email, emailVerified, dateOfBirth, primaryPhone, createdOn, genderCode, activated, picture);
     }
 }
