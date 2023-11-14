@@ -94,6 +94,4 @@ public class JdbcEventDao implements EventDao {
 
         return event;
     }
-
-
 }
