@@ -32,7 +32,7 @@ CREATE TABLE events (
     description varChar(1000) NOT NULL,
     img_url varChar(200) NOT NULL, --This will be the URI for the images stored in a separate location.
     ticket_cost NUMERIC(2),
-    purchase_ticket_link varChar(200),
+    purchase_ticket_url varChar(200),
     created_on timestamptz DEFAULT now(),
     is_private boolean DEFAULT FALSE,
     CONSTRAINT PK_event PRIMARY KEY (event_id),
