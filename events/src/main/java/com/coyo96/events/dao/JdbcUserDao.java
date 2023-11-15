@@ -2,7 +2,6 @@ package com.coyo96.events.dao;
 
 import com.coyo96.events.exception.DaoException;
 import com.coyo96.events.model.User;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +10,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.UUID;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -110,6 +109,6 @@ public class JdbcUserDao implements UserDao {
         }
         boolean activated = rowSet.getBoolean("activated");
 
-        return new User(userId, username, firstName, middleName, lastName, email, emailVerified, dateOfBirth, primaryPhone, createdOn, genderCode, activated, picture);
+        return new User(userId, username, firstName, middleName, lastName, email, emailVerified, dateOfBirth, primaryPhone, createdOn, genderCode, activated, picture, null);
     }
 }
