@@ -9,4 +9,8 @@ public interface UserDao {
     boolean createNewUser(User user);
 
     boolean updateUser(User user);
+
+    String getUserIdByUsername(String username);
+
+    User getPublicProfile(String userId);
 }

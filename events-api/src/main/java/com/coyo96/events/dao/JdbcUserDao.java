@@ -81,6 +81,28 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+    @Override
+    public String getUserIdByUsername(String username) {
+        String sql = "SELECT user_id FROM users WHERE username = ?";
+        try {
+            SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
+            if(rowSet.next()) {
+                return rowSet.getString("user_id");
+            } else {
+                throw new DaoException("Username: '" + username + "' does not exist");
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            log.debug("Error connecting to database. Error message: " + e.getMessage() + " "  + Arrays.toString(e.getStackTrace()));
+            throw new DaoException("Error connecting to database. Error message: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public User getPublicProfile(String userId) {
+        //TODO: create a public profile dto to return.
+        return null;
+    }
+
     private User mapRowSetToUser(SqlRowSet rowSet) {
         String userId = rowSet.getString("user_id");
         String username = rowSet.getString("username");

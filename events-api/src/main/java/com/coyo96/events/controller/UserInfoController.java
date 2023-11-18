@@ -15,11 +15,12 @@ import java.security.Principal;
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
+@RequestMapping("/api")
 public class UserInfoController {
     private UserDao userDao;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     //TODO: Set a PREAUTHORIZE annotation to only allow registration after user has logged in with Auth0 by using ROLES
     public void registerNewUser(Principal principal, @Valid User user) {
         String userId = principal.getName();
@@ -28,6 +29,16 @@ public class UserInfoController {
         if(!isRegistered){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @GetMapping("/user/{username}")
+    //TODO:
+    public User getUser(Principal principal, @PathVariable String username) {
+        String userId = userDao.getUserIdByUsername(username);
+        if(principal.getName().equals(userId)) {
+           return userDao.getUserById(userId);
+        } else {
+           return userDao.getPublicProfile(userId); //TODO: not implemented yet
+        }
     }
 }
