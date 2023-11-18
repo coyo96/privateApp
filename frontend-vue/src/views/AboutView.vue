@@ -2,6 +2,7 @@
 import { useAuth0 } from "@auth0/auth0-vue";
 import LoginButton from '@/components/LoginButton.vue';
 import LogoutButton from '@/components/LogoutButton.vue';
+import TestBackendCall from "@/components/TestBackendCall.vue";
 
 const { user, isAuthenticated, isLoading } = useAuth0(); 
 </script>
@@ -13,6 +14,7 @@ const { user, isAuthenticated, isLoading } = useAuth0();
     <div v-if="!isLoading && isAuthenticated">
         <code>{{ user }}</code>
     </div>
+    <TestBackendCall />
   </div>
 </template>
 
@@ -21,6 +23,7 @@ const { user, isAuthenticated, isLoading } = useAuth0();
   .about {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
   }
 }

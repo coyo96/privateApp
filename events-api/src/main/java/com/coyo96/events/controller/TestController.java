@@ -1,16 +1,18 @@
 package com.coyo96.events.controller;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
+@CrossOrigin(origins = "*")
 public class TestController {
     @GetMapping("/")
-    public String hey(@AuthenticationPrincipal OidcUser principal) {
+    public String hey(Principal principal) {
         if(principal != null) {
-            return "hey " + principal.getFullName() ;
+            return "hey " + principal.getName() ;
 
         } else {
             return "hey";

@@ -16,7 +16,8 @@ app.use(
         domain: 'dev-sethaker.us.auth0.com',
         clientId: "Ud60sEpQ4lzv5RVj3TZQgTrmv9A5GCID",
         authorizationParams: {
-            redirect_uri: window.location.origin 
+            redirect_uri: window.location.origin,
+            audience: "http://localhost:8080"
         }
     })
 )
