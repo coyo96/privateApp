@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;1,300&family=Courier+Prime:ital,wght@0,400;1,400;1,700&display=swap');
+/* 
+font-family: 'Averia Serif Libre', serif;
+font-family: 'Courier Prime', monospace; 
+*/
+
+:root{
+
+
+    --font-size-base: 1rem;
+    --h1-size: 2rem;
+    --h2-size: 1rem;
+
+/* colors */
+    --background-color: #222;
+    --background-color-2: #e8e8e8;
+    --body-fontcolor: hsl(0, 0%, 100%);
+    --red-button: #EF4136;
+    --h1-color: #fff;
+    --h2-color: #a26a39;
+
+/* fonts */
+    --body-fontfamily:'Averia Serif Libre', serif;
+    --typewriter-font:'Courier Prime', monospace;
+
+   
+}
+
+body{
+    background-color: var(--background-color);
+    font-size: 1rem;
+    font-family: var(--body-fontfamily);
+}
+
+
+input{
+    background: var(--red-button);
+    font-family: var(--typewriter-font);
+}
