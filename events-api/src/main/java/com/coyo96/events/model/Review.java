@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 public class Review {
     int reviewId;
-    String reviewerId;
+    long reviewerId;
     String reviewDescription;
     int rating;
     LocalDateTime createdOn;

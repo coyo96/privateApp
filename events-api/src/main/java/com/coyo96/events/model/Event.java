@@ -9,13 +9,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
 public class Event {
     int eventId;
-    String organizerId;
+    long organizerId;
     String eventName;
     LocalDate eventDate;
     LocalTime eventTime;

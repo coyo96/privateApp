@@ -11,7 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
-
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
@@ -21,24 +20,25 @@ public class UserInfoController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/user/register")
-    //TODO: Set a PREAUTHORIZE annotation to only allow registration after user has logged in with Auth0 by using ROLES
+    // TODO: Set a PREAUTHORIZE annotation to only allow registration after user has
+    // logged in with Auth0 by using ROLES
     public void registerNewUser(Principal principal, @Valid User user) {
-        String userId = principal.getName();
-        user.setUserId(userId);
+        String auth0Id = principal.getName();
+        user.setAuth0Id(auth0Id);
         boolean isRegistered = userDao.createNewUser(user);
-        if(!isRegistered){
+        if (!isRegistered) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/user/{username}")
-    //TODO:
+
     public User getUser(Principal principal, @PathVariable String username) {
-        String userId = userDao.getUserIdByUsername(username);
-        if(principal.getName().equals(userId)) {
-           return userDao.getUserById(userId);
+        long userId = userDao.getUserIdByUsername(username); // TODO: create method to get user by username
+        if (principal.getName().equals(userId)) {
+            return userDao.getUserById(userId);
         } else {
-           return userDao.getPublicProfile(userId); //TODO: not implemented yet
+            return userDao.getPublicProfile(userId); // TODO: not implemented yet
         }
     }
 }

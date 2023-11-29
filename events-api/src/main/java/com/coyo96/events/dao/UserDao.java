@@ -1,16 +1,18 @@
 package com.coyo96.events.dao;
 
-
 import com.coyo96.events.model.User;
 
 public interface UserDao {
 
-    User getUserById(String userId);
+    User getUserById(long userId);
+
     boolean createNewUser(User user);
 
     boolean updateUser(User user);
 
-    String getUserIdByUsername(String username);
+    long getUserIdByAuth0Id(String auth0Id);
 
-    User getPublicProfile(String userId);
+    long getUserIdByUsername(String username);
+
+    User getPublicProfile(long userId);
 }

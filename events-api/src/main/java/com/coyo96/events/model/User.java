@@ -1,7 +1,5 @@
 package com.coyo96.events.model;
 
-
-
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,40 +16,40 @@ import java.util.List;
 @Getter
 public class User {
 
-    //from Auth0
-    @JsonAlias(value = "user_id")
-    private String userId;
-    //from frontEnd
+    private long userId;
+
+    private String auth0Id;
+    // from frontEnd
     private String username;
-    //from Auth0
+    // from Auth0
     @JsonAlias(value = "first_name")
     private String firstName;
-    //from frontEnd
+    // from frontEnd
     @JsonAlias(value = "middle_name")
     private String middleName;
-    //from Auth0
+    // from Auth0
     @JsonAlias(value = "last_name")
     private String lastName;
-    //from Auth0
+    // from Auth0
     private String email;
-    //from Auth0
+    // from Auth0
     @JsonAlias(value = "email_verified")
     private Boolean emailVerified;
-    //from frontEnd
+    // from frontEnd
     @JsonAlias(value = "date_of_birth")
     private LocalDate dateOfBirth;
-    //from frontEnd
+    // from frontEnd
     @JsonAlias(value = "primary_phone")
     private Integer primaryPhone;
-    //from Auth0
+    // from Auth0
     @JsonAlias(value = "created_on")
     private LocalDateTime createdOn;
-    //from FrontEnd
+    // from FrontEnd
     @JsonAlias(value = "gender_code")
     private Character genderCode;
-    //from frontEnd
+    // from frontEnd
     private Boolean activated;
-    //from Auth0
+    // from Auth0
     private String picture;
 
     @JsonAlias(value = "user_address")

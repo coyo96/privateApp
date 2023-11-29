@@ -13,11 +13,13 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
 @AllArgsConstructor
 @Component
 @Slf4j
 public class JdbcReviewDao implements ReviewDao {
     private JdbcTemplate jdbcTemplate;
+
     @Override
     public List<Review> getEventReviews(int eventId) {
         String sql = "SELECT review_id, reviewer_id, review_description, rating, created_on " +
@@ -43,7 +45,7 @@ public class JdbcReviewDao implements ReviewDao {
                 "WHERE review_id = ?";
         try {
             SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, reviewId);
-            if(rowSet.next()){
+            if (rowSet.next()) {
                 return mapRowSetToReview(rowSet);
             } else {
                 throw new DaoException("Review not found");
@@ -60,7 +62,8 @@ public class JdbcReviewDao implements ReviewDao {
                 "VALUES (?,?,?,?) " +
                 "RETURNING review_id;";
         try {
-            return jdbcTemplate.update(sql, int.class, review.getReviewerId(), eventId, review.getReviewDescription(), review.getRating());
+            return jdbcTemplate.update(sql, int.class, review.getReviewerId(), eventId, review.getReviewDescription(),
+                    review.getRating());
         } catch (CannotGetJdbcConnectionException e) {
             log.error(e.getMessage());
             throw new DaoException("An error occurred connecting to the database.");
@@ -77,12 +80,12 @@ public class JdbcReviewDao implements ReviewDao {
                 "WHERE review_id = ?";
         try {
             return (1 == jdbcTemplate.update(sql,
-                                            review.getReviewerId(),
-                                            eventId,
-                                            review.getReviewDescription(),
-                                            review.getRating(),
-                                            review.getCreatedOn(),
-                                            review.getReviewId()));
+                    review.getReviewerId(),
+                    eventId,
+                    review.getReviewDescription(),
+                    review.getRating(),
+                    review.getCreatedOn(),
+                    review.getReviewId()));
         } catch (CannotGetJdbcConnectionException e) {
             log.error(e.getMessage());
             throw new DaoException("An error occurred connecting to the database.");
@@ -108,7 +111,7 @@ public class JdbcReviewDao implements ReviewDao {
 
     private Review mapRowSetToReview(SqlRowSet rowSet) {
         int reviewId = rowSet.getInt("review_id");
-        String reviewerId = rowSet.getString("reviewer_id");
+        long reviewerId = rowSet.getLong("reviewer_id");
         String reviewDescription = rowSet.getString("review_description");
         int rating = rowSet.getInt("rating");
         Timestamp createdOn = rowSet.getTimestamp("createdOn");

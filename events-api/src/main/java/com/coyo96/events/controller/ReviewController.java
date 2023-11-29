@@ -16,11 +16,13 @@ import java.security.Principal;
 @AllArgsConstructor
 public class ReviewController {
     private ReviewDao reviewDao;
+    private UserDao userDao;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/private/events/{eventId}/review")
     public Review createReview(@PathVariable int eventId, @RequestBody Review review, Principal principal) {
-        String userId = principal.getName();
+        String auth0Id = principal.getName();
+        long userId = userDao.getUserIdByAuth0Id(auth0Id);
         review.setReviewerId(userId);
         int reviewId = reviewDao.createReview(review, eventId);
         return reviewDao.getReviewById(reviewId);
@@ -29,12 +31,12 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping(value = "/private/events/{eventId}/review/{reviewId}")
     public void updateReview(@PathVariable int eventId, @PathVariable int reviewId,
-                               @RequestBody Review review, Principal principal) {
+            @RequestBody Review review, Principal principal) {
         String userId = principal.getName();
-        if(!userId.equals(reviewDao.getReviewById(reviewId).getReviewerId())){
-           throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!userId.equals(reviewDao.getReviewById(reviewId).getReviewerId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        if(!reviewDao.updateReview(review, eventId)){
+        if (!reviewDao.updateReview(review, eventId)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -43,10 +45,10 @@ public class ReviewController {
     @DeleteMapping(value = "/private/events/{eventId}/review/{reviewId}")
     public void deleteReview(@PathVariable int eventId, @PathVariable int reviewId, Principal principal) {
         String userId = principal.getName();
-        if(!userId.equals(reviewDao.getReviewById(reviewId).getReviewerId())){
+        if (!userId.equals(reviewDao.getReviewById(reviewId).getReviewerId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        if(!reviewDao.deleteReview(reviewId)) {
+        if (!reviewDao.deleteReview(reviewId)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
