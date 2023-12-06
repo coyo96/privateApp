@@ -4,7 +4,8 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
-import {useAuth0, Auth0Provider} from 'react-native-auth0';
+import { Auth0Provider} from 'react-native-auth0';
+import { domain, clientId } from '../constants/AuthConfig';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,7 +48,7 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <Auth0Provider domain="dev-sethaker.us.auth0.com" clientId='Ud60sEpQ4lzv5RVj3TZQgTrmv9A5GCID'>
+    <Auth0Provider domain={domain} clientId={clientId} >
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

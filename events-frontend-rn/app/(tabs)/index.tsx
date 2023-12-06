@@ -3,6 +3,7 @@ import { Button, StyleSheet } from 'react-native';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import { Text, View } from '../../components/Themed';
 import { useAuth0 } from 'react-native-auth0'
+import getTokenSilently from '../../service/TokenService';
 
 export default function TabOneScreen() {
   const { authorize, clearSession, user, error, isLoading} = useAuth0();
@@ -21,6 +22,8 @@ export default function TabOneScreen() {
       console.log('Log out cancelled');
     }
   };
+
+  const getToken = async () => getTokenSilently();
 
   if (isLoading) {
     return <View style={styles.container}><Text>Loading</Text></View>;
@@ -41,6 +44,10 @@ export default function TabOneScreen() {
         onPress={loggedIn ? onLogout : onLogin}
         title={loggedIn ? 'Log Out' : 'Log In'}
       />
+      <Button 
+        onPress={getToken}
+        title="Get Token"
+        />
     </View>
   );
 }

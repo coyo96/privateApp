@@ -4,7 +4,6 @@ CREATE TABLE users (
     user_id bigserial NOT NULL, 
     username varchar(20) NOT NULL UNIQUE, 
     first_name varchar(30),
-    middle_name varChar(30),
     last_name varChar(30),
     email varChar(100) UNIQUE,
     email_verified boolean,
