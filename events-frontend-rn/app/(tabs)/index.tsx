@@ -71,7 +71,7 @@ export default function TabOneScreen() {
       />
       <Button 
         onPress={registerNewUser}
-        title="Call Api"
+        title="callApi"
         />
     </View>
   );
