@@ -3,29 +3,29 @@ import { Button, StyleSheet } from 'react-native';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import { Text, View } from '../../components/Themed';
 import { useAuth0 } from 'react-native-auth0'
-import { useState } from 'react';
+import { useToken } from '../../hooks/useToken';
 
 export default function TabOneScreen() {
   const { authorize, clearSession, getCredentials, user, error, isLoading} = useAuth0();
-  const [accessToken, setAccessToken] = useState<string | undefined>("");
+  const { accessToken, setAccessToken } = useToken();
   const onLogin = async () => {
     try {
       await authorize({scope: "openid profile offline_access", audience: 'http://localhost:8080'});
       const credentials = await getCredentials();
-      setAccessToken(credentials?.accessToken)
-      console.log(credentials?.scope)
+      setAccessToken(credentials?.accessToken);
     } catch (e) {
       console.log(e);
     }
   };
   const registerNewUser = async () => {
+    // WARNING: For testing purposes only
     const newUser = {
       username: user?.name,
       email: user?.email,
       email_verified: user?.emailVerified,
       first_name: user?.givenName,
       last_name: user?.familyName,
-      date_of_birth: new Date("06/26/1997"),
+      date_of_birth: user?.birthdate !== undefined ? new Date(user.birthdate) : undefined,
       primary_phone: 14807101780,
       gender_code: "m",
       activated: true,
