@@ -18,4 +18,13 @@ public class TestController {
             return "hey";
         }
     }
+    @GetMapping("/api/hey")
+    public String hey2(Principal principal) {
+        if(principal != null) {
+            return "hey " + principal.getName() ;
+
+        } else {
+            return "you suck";
+        }
+    }
 }

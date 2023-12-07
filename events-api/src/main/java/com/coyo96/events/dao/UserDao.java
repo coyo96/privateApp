@@ -10,9 +10,9 @@ public interface UserDao {
 
     boolean updateUser(User user);
 
-    long getUserIdByAuth0Id(String auth0Id);
+    Long getUserIdByAuth0Id(String auth0Id);
 
-    long getUserIdByUsername(String username);
+    Long getUserIdByUsername(String username);
 
     User getPublicProfile(long userId);
 }

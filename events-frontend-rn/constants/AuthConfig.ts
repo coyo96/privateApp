@@ -8,6 +8,8 @@ export const domain = "dev-sethaker.us.auth0.com";
 export const clientId = "Ud60sEpQ4lzv5RVj3TZQgTrmv9A5GCID";
 export const redirectUri = Platform.OS === 'android' ? "com.eventsapp.android.auth0://dev-sethaker.us.auth0.com/android/com.eventsapp.android/callback" : "com.eventsapp.ios.auth0://dev-sethaker.us.auth0.com/android/com.eventsapp.ios/callback";
 export const audience = 'http://localhost:8080';
+
+
 export const getVerifier = async () => {
     const byteArray = getRandomBytes(32);
     const base64string = Buffer.from(byteArray).toString('base64');

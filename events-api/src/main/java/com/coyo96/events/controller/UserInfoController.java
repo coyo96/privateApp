@@ -1,11 +1,10 @@
 package com.coyo96.events.controller;
 
 import com.coyo96.events.dao.UserDao;
+import com.coyo96.events.exception.DaoException;
 import com.coyo96.events.model.User;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,15 +19,19 @@ public class UserInfoController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/user/register")
-    // TODO: Set a PREAUTHORIZE annotation to only allow registration after user has
-    // logged in with Auth0 by using ROLES
-    public void registerNewUser(Principal principal, @Valid User user) {
+    public void registerNewUser(Principal principal, @RequestBody User user) {
         String auth0Id = principal.getName();
-        user.setAuth0Id(auth0Id);
-        boolean isRegistered = userDao.createNewUser(user);
-        if (!isRegistered) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Long userId = userDao.getUserIdByAuth0Id(auth0Id);
+        if(userId == null) {
+            user.setAuth0Id(auth0Id);
+            boolean isRegistered = userDao.createNewUser(user);
+            if (!isRegistered) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
         }
+
     }
 
     @GetMapping("/user/{username}")

@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 public class User {
 
-    private long userId;
+    private Long userId;
 
     private String auth0Id;
     // from frontEnd
@@ -24,9 +24,6 @@ public class User {
     // from Auth0
     @JsonAlias(value = "first_name")
     private String firstName;
-    // from frontEnd
-    @JsonAlias(value = "middle_name")
-    private String middleName;
     // from Auth0
     @JsonAlias(value = "last_name")
     private String lastName;
@@ -40,7 +37,7 @@ public class User {
     private LocalDate dateOfBirth;
     // from frontEnd
     @JsonAlias(value = "primary_phone")
-    private Integer primaryPhone;
+    private Long primaryPhone;
     // from Auth0
     @JsonAlias(value = "created_on")
     private LocalDateTime createdOn;

@@ -2,13 +2,14 @@ BEGIN TRANSACTION;
 
 CREATE TABLE users (
     user_id bigserial NOT NULL, 
+    auth0_id varChar NOT NULL,
     username varchar(20) NOT NULL UNIQUE, 
     first_name varchar(30),
     last_name varChar(30),
     email varChar(100) UNIQUE,
     email_verified boolean,
     date_of_birth DATE,
-    primary_phone int UNIQUE,
+    primary_phone bigint UNIQUE,
     created_on timestamptz DEFAULT now(),
     gender_code varChar(1), --Optional parameter.
     activated boolean DEFAULT TRUE, --If a user deletes their account, it is bad practice to actually delete it. This marks that the account should not be visible to anyone.

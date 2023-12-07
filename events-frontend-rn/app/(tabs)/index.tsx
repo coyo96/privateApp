@@ -3,17 +3,44 @@ import { Button, StyleSheet } from 'react-native';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import { Text, View } from '../../components/Themed';
 import { useAuth0 } from 'react-native-auth0'
-import getTokenSilently from '../../service/TokenService';
+import { useState } from 'react';
 
 export default function TabOneScreen() {
-  const { authorize, clearSession, user, error, isLoading} = useAuth0();
+  const { authorize, clearSession, getCredentials, user, error, isLoading} = useAuth0();
+  const [accessToken, setAccessToken] = useState<string | undefined>("");
   const onLogin = async () => {
     try {
-      await authorize();
+      await authorize({scope: "openid profile offline_access", audience: 'http://localhost:8080'});
+      const credentials = await getCredentials();
+      setAccessToken(credentials?.accessToken)
+      console.log(credentials?.scope)
     } catch (e) {
       console.log(e);
     }
   };
+  const registerNewUser = async () => {
+    const newUser = {
+      username: user?.name,
+      email: user?.email,
+      email_verified: user?.emailVerified,
+      first_name: user?.givenName,
+      last_name: user?.familyName,
+      date_of_birth: new Date("06/26/1997"),
+      primary_phone: 14807101780,
+      gender_code: "m",
+      activated: true,
+      picture: user?.picture,
+      user_address: user?.address
+    }
+    const response = await fetch("http://192.168.1.117:8080/api/user/register", {
+      method: "POST", 
+      headers: {
+        "Content-type": "application/json", 
+        authorization: "Bearer " + accessToken},
+        body: JSON.stringify(newUser)
+      })
+    console.log(JSON.stringify(response));
+  }
 
   const onLogout = async () => {
     try {
@@ -22,8 +49,6 @@ export default function TabOneScreen() {
       console.log('Log out cancelled');
     }
   };
-
-  const getToken = async () => getTokenSilently();
 
   if (isLoading) {
     return <View style={styles.container}><Text>Loading</Text></View>;
@@ -45,8 +70,8 @@ export default function TabOneScreen() {
         title={loggedIn ? 'Log Out' : 'Log In'}
       />
       <Button 
-        onPress={getToken}
-        title="Get Token"
+        onPress={registerNewUser}
+        title="Call Api"
         />
     </View>
   );

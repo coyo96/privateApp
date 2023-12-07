@@ -2,7 +2,6 @@ package com.coyo96.events.dao;
 
 import com.coyo96.events.exception.DaoException;
 import com.coyo96.events.model.User;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -14,14 +13,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Component
 @Slf4j
 public class JdbcUserDao implements UserDao {
 
     private JdbcTemplate jdbcTemplate;
 
+    public JdbcUserDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
     @Override
     public User getUserById(long userId) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
@@ -42,13 +42,12 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean createNewUser(User user) {
-        String sql = "INSERT INTO users (user_id, auth0_id, username, first_name, middle_name, last_name, email, " +
+        String sql = "INSERT INTO users (auth0_id, username, first_name, last_name, email, " +
                 "email_verified, date_of_birth, primary_phone, gender_code, picture) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+                "VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
-            int rowsReturned = jdbcTemplate.update(sql, user.getUserId(), user.getAuth0Id(), user.getUsername(),
+            int rowsReturned = jdbcTemplate.update(sql, user.getAuth0Id(), user.getUsername(),
                     user.getFirstName(),
-                    user.getMiddleName(),
                     user.getLastName(), user.getEmail(), user.getEmailVerified(), user.getDateOfBirth(),
                     user.getPrimaryPhone(), user.getGenderCode(), user.getPicture());
             if (rowsReturned != 1) {
@@ -59,19 +58,21 @@ public class JdbcUserDao implements UserDao {
             log.debug("Error connecting to database. Error message: " + e.getMessage() + " "
                     + Arrays.toString(e.getStackTrace()));
             throw new DaoException("Error connecting to database. Error message: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new DaoException("Error connecting to database. Error message: " + e.getMessage());
         }
     }
 
     @Override
     public boolean updateUser(User user) {
-        String sql = "UPDATE auth0_id = ?, username = ?, first_name = ?, middle_name = ?, last_name = ?, email = ?, " +
+        String sql = "UPDATE auth0_id = ?, username = ?, first_name = ?, last_name = ?, email = ?, " +
                 "email_verified = ?, date_of_birth = ?, primary_phone = ?, created_on = ?, " +
                 "gender_code = ?, activated = ?, picture = ? " +
                 "FROM users " +
                 "WHERE user_id = ?";
         try {
             int rowsReturned = jdbcTemplate.update(sql, user.getAuth0Id(), user.getUsername(), user.getFirstName(),
-                    user.getMiddleName(),
                     user.getLastName(), user.getEmail(), user.getEmailVerified(), user.getDateOfBirth(),
                     user.getPrimaryPhone(), user.getCreatedOn(), user.getGenderCode(),
                     user.getEmailVerified(), user.getPicture(), user.getUserId());
@@ -87,14 +88,14 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public long getUserIdByAuth0Id(String auth0Id) {
-        String sql = "SELECT user_id FROM users WHERE username = ?";
+    public Long getUserIdByAuth0Id(String auth0Id) {
+        String sql = "SELECT user_id FROM users WHERE auth0_id = ?";
         try {
             SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, auth0Id);
             if (rowSet.next()) {
                 return rowSet.getLong("user_id");
             } else {
-                throw new DaoException("Username: '" + auth0Id + "' does not exist");
+                return null;
             }
         } catch (CannotGetJdbcConnectionException e) {
             log.debug("Error connecting to database. Error message: " + e.getMessage() + " "
@@ -104,7 +105,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public long getUserIdByUsername(String username) {
+    public Long getUserIdByUsername(String username) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getUserIdByUsername'");
     }
@@ -121,7 +122,6 @@ public class JdbcUserDao implements UserDao {
         String username = rowSet.getString("username");
         String picture = rowSet.getString("picture");
         String firstName = rowSet.getString("first_name");
-        String middleName = rowSet.getString("middle_name");
         String lastName = rowSet.getString("last_name");
         String email = rowSet.getString("email");
         boolean emailVerified = rowSet.getBoolean("email_verified");
@@ -132,8 +132,7 @@ public class JdbcUserDao implements UserDao {
         } catch (NullPointerException e) {
             dateOfBirth = null;
         }
-
-        int primaryPhone = rowSet.getInt("primaryPhone");
+        Long primaryPhone = rowSet.getLong("primaryPhone");
         LocalDateTime createdOn = rowSet.getTimestamp("created_on").toLocalDateTime(); // will never be null;
         Character genderCode;
 
@@ -144,7 +143,7 @@ public class JdbcUserDao implements UserDao {
         }
         boolean activated = rowSet.getBoolean("activated");
 
-        return new User(userId, auth0Id, username, firstName, middleName, lastName, email, emailVerified, dateOfBirth,
+        return new User(userId, auth0Id, username, firstName, lastName, email, emailVerified, dateOfBirth,
                 primaryPhone, createdOn, genderCode, activated, picture, null);
     }
 

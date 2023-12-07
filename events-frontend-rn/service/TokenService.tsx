@@ -1,6 +1,7 @@
-import {discoveryDocument, clientId, redirectUri, audience, getCodeChallenge , getVerifier} from "../constants/AuthConfig"
+import {discoveryDocument, clientId, redirectUri, audience, getCodeChallenge , getVerifier, domain} from "../constants/AuthConfig"
 import URLEncode from "../utils/URLEncode";
 import * as AuthSession from 'expo-auth-session'
+import toQueryString from "../utils/toQueryString";
 
 export default async function getTokenSilently() {
     const state = Math.random().toString(36).substring(2,15);
@@ -13,7 +14,7 @@ export default async function getTokenSilently() {
         codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
         clientId,
         redirectUri,
-        scopes: ['openid', 'profile', 'email', 'offline_access'],
+        scopes: ['offline_access'],
         state,
         extraParams: {audience: audience}
     };
@@ -43,4 +44,27 @@ export default async function getTokenSilently() {
     }
     
 }
+
+export const getTokenSilently2 = async () => {
+    const state = Math.random().toString(36).substring(2,15);
+    const codeVerifier = await getVerifier();
+    const codeChallenge = URLEncode(await getCodeChallenge(codeVerifier));
+    const authRequestOptions = {
+        audience,
+        scope:"offline_access",
+        response_type: 'code',
+        client_id: clientId,
+        nonce: state,
+        redirect_uri: redirectUri,
+        code_challenge_method: "S256",
+        code_challenge: codeChallenge,
+    }
+    const codeRequestUrl = `https://${domain}/authorize`+ (toQueryString(authRequestOptions));
+    console.log(codeRequestUrl);
+    const result = await fetch(codeRequestUrl);
+    console.log(result)
+    
+    
+}
+
 
