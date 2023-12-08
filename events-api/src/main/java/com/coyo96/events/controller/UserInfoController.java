@@ -5,9 +5,11 @@ import com.coyo96.events.exception.DaoException;
 import com.coyo96.events.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.security.Principal;
 
 @RestController
@@ -34,8 +36,17 @@ public class UserInfoController {
 
     }
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/user/validate")
+    public ResponseEntity<Void> isRegistered(Principal principal) {
+        String auth0Id = principal.getName();
+        if(userDao.getUserIdByAuth0Id(auth0Id) == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+    }
 
+    @GetMapping("/user/{username}")
     public User getUser(Principal principal, @PathVariable String username) {
         long userId = userDao.getUserIdByUsername(username); // TODO: create method to get user by username
         if (principal.getName().equals(userId)) {

@@ -22,7 +22,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/api/user/register").authenticated()
+                        .requestMatchers("/api/user/register", "/api/user/**").authenticated()
                         .requestMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 )
                 .cors(withDefaults())
