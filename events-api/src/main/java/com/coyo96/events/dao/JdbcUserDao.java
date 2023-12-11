@@ -42,11 +42,11 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean createNewUser(User user) {
-        String sql = "INSERT INTO users (auth0_id, username, first_name, last_name, email, " +
+        String sql = "INSERT INTO users (auth0_id, first_name, last_name, email, " +
                 "email_verified, date_of_birth, primary_phone, gender_code, picture) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?)";
+                "VALUES (?,?,?,?,?,?,?,?,?)";
         try {
-            int rowsReturned = jdbcTemplate.update(sql, user.getAuth0Id(), user.getUsername(),
+            int rowsReturned = jdbcTemplate.update(sql, user.getAuth0Id(),
                     user.getFirstName(),
                     user.getLastName(), user.getEmail(), user.getEmailVerified(), user.getDateOfBirth(),
                     user.getPrimaryPhone(), user.getGenderCode(), user.getPicture());

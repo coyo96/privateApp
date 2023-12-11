@@ -3,7 +3,7 @@ BEGIN TRANSACTION;
 CREATE TABLE users (
     user_id bigserial NOT NULL, 
     auth0_id varChar NOT NULL,
-    username varchar(20) NOT NULL UNIQUE, 
+    username varchar(20) UNIQUE, 
     first_name varchar(30),
     last_name varChar(30),
     email varChar(100) UNIQUE,

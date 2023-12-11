@@ -11,8 +11,9 @@ import { router } from "expo-router";
 
 export default function RegistrationPage2() {
     const maxDate = new Date();
-    const { dateOfBirth, setDateOfBirth, gender, setGender } = useRegistrationContext();
-    const { user, isLoading } = useAuth0();
+    const { dateOfBirth, setDateOfBirth, 
+            gender, setGender } = useRegistrationContext();
+    const { user } = useAuth0();
     const [dateOfBirthString, setDateOfBirthString] = useState("")
     const [showCalendar, setShowCalendar] = useState(false);
     

@@ -1,7 +1,6 @@
 package com.coyo96.events.controller;
 
 import com.coyo96.events.dao.UserDao;
-import com.coyo96.events.exception.DaoException;
 import com.coyo96.events.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.net.URI;
+
 import java.security.Principal;
 
 @RestController

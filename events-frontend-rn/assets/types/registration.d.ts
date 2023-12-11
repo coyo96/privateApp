@@ -1,15 +1,14 @@
 export type AppUser = {
-    auth0Id: string,
-    username: string,
+    username?: string,
     firstName: string,
     lastName: string,
     email: string,
     emailVerified: boolean,
     dateOfBirth: Date,
     primaryPhone: number,
-    genderCode: Gender,
+    genderCode?: Gender,
     picture: string
-    address: Address
+    address?: Address
 }
 
 export type Address = {

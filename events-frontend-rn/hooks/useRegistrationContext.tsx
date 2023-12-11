@@ -6,13 +6,13 @@ import { RegistrationContext } from '../context/RegistrationContext';
  * ```ts
  * const {
  * //state
- * email,
- * firstName,
- * lastName,
- * dateOfBirth,
- * primaryPhone,
- * gender,
- * address
+ * email: string,
+ * firstName: string,
+ * lastName: string,
+ * dateOfBirth: Date,
+ * primaryPhone: number,
+ * gender: string,
+ * address: Address
  * 
  * //Methods
  * setEmail,
